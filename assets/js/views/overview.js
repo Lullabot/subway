@@ -61,7 +61,7 @@ var OverviewView = Backbone.View.extend({
     keepAlive = false;
     
     if (!server) {
-      $('#connect-server').closest('.control-group').addClass('error');
+      server = 'chat.freenode.net';
     }
     
     if (!nick) {
