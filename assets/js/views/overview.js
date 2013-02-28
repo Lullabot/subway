@@ -26,6 +26,10 @@ var OverviewView = Backbone.View.extend({
     }
 
     $('.overview_button').bind('click', $.proxy(this.render, this));
+
+    // Automatically click "new connection".
+    $('#connection').click();
+
     return this;
   },
 
