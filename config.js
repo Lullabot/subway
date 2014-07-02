@@ -1,6 +1,6 @@
 exports.dev = {
     port: process.env.PORT || 3000,
-    client_port: process.env.PORT || 3000,
+    client_port: process.env.PORT || 443,
     mongoose_auth: process.env.MONGODB_URL || 'mongodb://mongodb@localhost/subway'
 }
 
