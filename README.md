@@ -27,7 +27,7 @@ Installation
 
 1. Assuming you already have node.js, npm, and mongo, run:
 
-        $ git clone https://github.com/thedjpetersen/subway.git
+        $ git clone https://github.com/Lullabot/subway.git
         $ cd subway
 
 2. Install the dependencies using npm:
@@ -40,6 +40,32 @@ Installation
 
 4. Point your browser at `http://localhost:3000/`
 
+Upstart Script
+--------------
+
+````
+description "subway"
+
+start on started networking
+stop on runlevel [!2345]
+
+env SWHOME=/opt/subway
+env SWLOGS=/var/log/subway
+env SWUSER=subway
+
+respawn
+
+pre-start script
+    mkdir -p $SWLOGS
+    chown -R $SWUSER:adm $SWLOGS
+    chmod 0750 $SWLOGS
+end script
+
+script
+  cd $SWHOME
+  exec su -s /bin/sh -c 'exec "$0" "$@"' $SWUSER -- node subway 2>&1 >> $SWLOGS/subway.log
+end script
+````
 
 Deployment
 -----------
