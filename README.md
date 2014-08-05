@@ -1,3 +1,12 @@
+# Lullabot Subway
+A fork of Subway IRC.
+
+- Allows a channel to be specified on the initial connection screen or through the URL e.g. http://localhost:3000/?channel=%23lullabuddies
+- Removes the Registration/Login
+- Only allows connections to irc.freenode.net
+- Rejigs the connection screen slightly
+- Adds some Lullabot branding
+
 Subway
 ======
 
