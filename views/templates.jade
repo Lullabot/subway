@@ -31,12 +31,12 @@ script(id="overview_home", type="text/html")
       img(src="/assets/images/settings.svg")
       span Settings
     {{^loggedIn}}
-    li.overview_button#login
-      img(src="/assets/images/login.svg")
-      span Login
-    li.overview_button#register
-      img(src="/assets/images/register.svg")
-      span Register
+    //li.overview_button#login
+    //  img(src="/assets/images/login.svg")
+    //  span Login
+    //li.overview_button#register
+    //  img(src="/assets/images/register.svg")
+    //  span Register
     {{/loggedIn}}
 
 script(id="overview", type="text/html")
@@ -49,14 +49,11 @@ script(id="overview_connection", type="text/html")
       span Go back
   form.form-inline
     .control-group
-      label(for="connect-nick") Nick
+      label(for="connect-nick") Nickname
       input#connect-nick(type="text")
     .control-group
-      label(for="connect-server") Server
-      input#connect-server(type="text")
-    .control-group
-      label(for="connect-password") Server password (optional)
-      input#connect-password(type="password")
+      //label(for="connect-password") Server password (optional)
+      input#connect-password(type="hidden")
     .control-group
       label(for="connect-realName") Real Name
       input#connect-realName(type="text")
@@ -65,11 +62,14 @@ script(id="overview_connection", type="text/html")
       input#connect-remember(type="checkbox",checked="checked")
     .connect-more-options.hide
       .control-group
+        label(for="connect-server") Server
+        input#connect-server(type="text",value="irc.freenode.net")
+      .control-group
         label(for="connect-port") Port
         input#connect-port.input-small(type="text", placeholder="6667")
       .control-group
         label(for="connect-secure") SSL
-        input#connect-secure(type="checkbox")
+        input#connect-secure(type="checkbox",checked="checked")
       .control-group#ssl-self-signed
         label(for="connect-selfSigned") Allow Self-signed Certs
         input#connect-selfSigned(type="checkbox")
