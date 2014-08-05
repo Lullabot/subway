@@ -159,6 +159,12 @@ $(function() {
   irc.socket.on('motd', function(data) {
     var message = new Message({sender: 'status', raw: data.motd, type: 'motd'});
     irc.chatWindows.getByName('status').stream.add(message);
+
+    // Join a pre-specified channel.
+    var channel = irc.me.get('defaultChannel');
+    if (typeof channel !== "undefined" && typeof channel[0] !== "undefined" && channel[0].length > 0) {
+      irc.socket.emit('join', channel.join(" "));
+    }
   });
 
   // Whois data
@@ -434,7 +440,7 @@ $(function() {
     var commandStore = {
       'default': function(args, command){
         // Do nothing, override it;
-      },
+      }
     };
 
     that = {

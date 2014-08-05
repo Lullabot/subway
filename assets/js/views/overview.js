@@ -3,7 +3,7 @@ var OverviewView = Backbone.View.extend({
     // Check if we are logged in with a cookie.
     if ($.cookie('auth_token')){
       irc.socket.emit('session_check', {
-        auth_token: $.cookie('auth_token'),
+        auth_token: $.cookie('auth_token')
       });
     } else {
       // If not, we render the overview page.
@@ -36,7 +36,14 @@ var OverviewView = Backbone.View.extend({
     $('.overview_button').bind('click', $.proxy(this.render, this));
 
     // Load saved settings.
-    this.savedSettings(['nick', 'realName', 'server']);
+    this.savedSettings(['nick', 'realName', 'server', 'channelName']);
+
+    // Override the channel name.
+    var channel = window.utils.getUrlParameter('channel');
+    if (typeof channel !== "undefined") {
+      channel = decodeURIComponent(channel);
+      $('#connect-channelName').val(channel);
+    }
 
     return this;
   },
@@ -82,6 +89,8 @@ var OverviewView = Backbone.View.extend({
     encoding = $('#connect-encoding').val(),
     stripColors = $('#connect-stripColors').is(':checked'),
     keepAlive = false;
+    channelName = $('#connect-channelName').val();
+    channelPassword = $('#connect-channelPassword').val();
     
     if (!server) {
       $('#connect-server').closest('.control-group').addClass('error');
@@ -110,7 +119,8 @@ var OverviewView = Backbone.View.extend({
         password: password,
         encoding: encoding,
         stripColors: stripColors,
-        keepAlive: keepAlive
+        keepAlive: keepAlive,
+        defaultChannel: [channelName, channelPassword]
       };
 
       irc.me = new User(connectInfo);
@@ -122,11 +132,13 @@ var OverviewView = Backbone.View.extend({
         sessionStorage.setItem('nick', nick);
         sessionStorage.setItem('realName', realName);
         sessionStorage.setItem('server', server);
+        sessionStorage.setItem('channelName', channelName);
       }
       else {
         sessionStorage.removeItem('nick');
         sessionStorage.removeItem('realName');
         sessionStorage.removeItem('server');
+        sessionStorage.removeItem('channelName');
       }
     }
   },

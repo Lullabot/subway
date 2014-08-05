@@ -58,6 +58,12 @@ script(id="overview_connection", type="text/html")
       label(for="connect-realName") Real Name
       input#connect-realName(type="text")
     .control-group
+      label(for="connect-channelName") Channel
+      input#connect-channelName(type="text")
+    .control-group
+      label(for="connect-channelPassword") Channel Password
+      input#connect-channelPassword(type="password")
+    .control-group
       label(for="connect-remember") Remember Me
       input#connect-remember(type="checkbox",checked="checked")
     .connect-more-options.hide
@@ -206,7 +212,7 @@ script(id="user_box", type="text/html")
     i(class="icon-user icon-white spacing-right")
     {{nick}}
   div.user_box_element
-    .close-button(title="Close connection to {{server}}") ×
+    //.close-button(title="Close connection to {{server}}") ×
     i(class="icon-asterisk icon-white spacing-right")
     {{server}}
 
