@@ -166,7 +166,7 @@ var ChatApplicationView = Backbone.View.extend({
 
   // Display a desktop notification. 
   displayNotification: function(title, body) {
-    var icon = '/assets/images/subway.png';
+    var icon = '/assets/images/lullalogo_vertical.png';
     // Firefox:
     if ("Notification" in window && "get" in window.Notification) {
       if (Notification.permission === 'granted') {

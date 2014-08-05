@@ -31,8 +31,8 @@ $(function() {
   try {
     window.unity.api = external.getUnityObject(1.0);
     window.unity.init({
-      name: "Subway IRC",
-      iconUrl: window.location.protocol+"//"+window.location.host+"/assets/images/subway.png",
+      name: "Chat",
+      iconUrl: window.location.protocol+"//"+window.location.host+"/assets/images/lullalogo_vertical.png",
       onInit: function() {
         window.unity.connected = true;
         console.log('Unity support enabled');
