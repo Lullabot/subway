@@ -24,6 +24,8 @@
       margin-right: auto;
       width: 100%;
       z-index: 1; }
+    .container-fluid #logo > img {
+      max-height: 100px; }
     .container-fluid .sidebar h2 {
       margin-top: 120px; }
     .container-fluid .sidebar {

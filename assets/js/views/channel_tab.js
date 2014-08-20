@@ -7,6 +7,7 @@ var ChannelTabView = Backbone.View.extend({
   },
 
   initialize: function() {
+    this.model['initial'] = true;
     this.model.stream.bind('add', this.updateUnreadCounts, this);
     this.model.bind('destroy', this.switchAndRemove, this)
       .bind('change:active', this.removeUnread, this);
@@ -34,7 +35,7 @@ var ChannelTabView = Backbone.View.extend({
     var unread = this.model.get('unread');
     var unreadMentions = this.model.get('unreadMentions');
 
-    if ($(this.el).hasClass('active')) return;
+    if ($(this.el).hasClass('active') && !this.model.initial) return;
 
     // TODO: do something more sensible here than remove/readd elements
     // this.$el.children('.unread, .unread_mentions').remove();
@@ -44,6 +45,8 @@ var ChannelTabView = Backbone.View.extend({
 
     if (unreadMentions > 0) this.$('.unread-mentions').text(unreadMentions).show();
     else this.$('.unread-mentions').hide();
+
+    this.model.initial = false;
   },
 
   removeUnread: function() {
@@ -54,11 +57,16 @@ var ChannelTabView = Backbone.View.extend({
 
   close: function(e) {
     e.stopPropagation();
-    if (this.model.get('type') === 'channel')
-      irc.socket.emit('part', this.model.get('name'));
-    else
+    if (this.model.get('type') === 'channel') {
+      var response = confirm("Are you sure you want to leave " + this.model.get('name') + "?");
+      if (response) {
+        irc.socket.emit('part', this.model.get('name'));
+      }
+    }
+    else {
       irc.socket.emit('part_pm', this.model.get('name'));
       this.model.destroy();
+    }
   },
 
   switchAndRemove: function() {
@@ -73,7 +81,7 @@ var ChannelTabView = Backbone.View.extend({
       }
     }
     this.remove();
-    if (typeof($nextTab.click) == 'function'){
+    if ($nextTab && typeof($nextTab.click) == 'function') {
       $nextTab.click();
     }
   }

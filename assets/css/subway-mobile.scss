@@ -32,6 +32,11 @@
             width: 100%;
             z-index: 1;
         }
+
+        #logo > img {
+          max-height: 100px;
+        }
+
         .sidebar h2 {
             margin-top: 120px;
         }

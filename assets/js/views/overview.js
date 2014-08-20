@@ -1,6 +1,14 @@
 var OverviewView = Backbone.View.extend({
   initialize: function() {
-    this.render();
+    // Check if we are logged in with a cookie.
+    if ($.cookie('auth_token')){
+      irc.socket.emit('session_check', {
+        auth_token: $.cookie('auth_token')
+      });
+    } else {
+      // If not, we render the overview page.
+      this.render();
+    }
   },
 
   events: {
@@ -28,7 +36,14 @@ var OverviewView = Backbone.View.extend({
     $('.overview_button').bind('click', $.proxy(this.render, this));
 
     // Load saved settings.
-    this.savedSettings(['nick', 'realName', 'server']);
+    this.savedSettings(['nick', 'realName', 'server', 'channelName']);
+
+    // Override the channel name.
+    var channel = window.utils.getUrlParameter('channel');
+    if (typeof channel !== "undefined") {
+      channel = decodeURIComponent(channel);
+      $('#connect-channelName').val(channel);
+    }
 
     // Automatically click "new connection".
     $('#connection').click();
@@ -73,10 +88,12 @@ var OverviewView = Backbone.View.extend({
     realName = $('#connect-realName').val() || nick,
     secure = $('#connect-secure').is(':checked'),
     selfSigned = $('#connect-selfSigned').is(':checked'),
-    rejoin = $('#connect-rejoin').is(':checked'),
     password = $('#connect-password').val(),
     encoding = $('#connect-encoding').val(),
+    stripColors = $('#connect-stripColors').is(':checked'),
     keepAlive = false;
+    channelName = $('#connect-channelName').val();
+    channelPassword = $('#connect-channelPassword').val();
     
     if (!server) {
       server = 'chat.freenode.net';
@@ -100,12 +117,13 @@ var OverviewView = Backbone.View.extend({
         port: port,
         secure: secure,
         selfSigned: selfSigned,
-        rejoin: rejoin,
         away: away,
         realName: realName,
         password: password,
         encoding: encoding,
-        keepAlive: keepAlive
+        stripColors: stripColors,
+        keepAlive: keepAlive,
+        defaultChannel: [channelName, channelPassword]
       };
 
       irc.me = new User(connectInfo);
@@ -117,11 +135,13 @@ var OverviewView = Backbone.View.extend({
         sessionStorage.setItem('nick', nick);
         sessionStorage.setItem('realName', realName);
         sessionStorage.setItem('server', server);
+        sessionStorage.setItem('channelName', channelName);
       }
       else {
         sessionStorage.removeItem('nick');
         sessionStorage.removeItem('realName');
         sessionStorage.removeItem('server');
+        sessionStorage.removeItem('channelName');
       }
     }
   },
@@ -137,26 +157,27 @@ var OverviewView = Backbone.View.extend({
 
     var username = $('#' + action + '-username').val();
     var password = $('#' + action + '-password').val();
- 
+
     if (!username) {
-      $('#' + action + '-username').closest('.clearfix').addClass('error');
-      $('#' + action + '-username').addClass('error');
+      $('#' + action + '-username').closest('.control-group').addClass('error');
+      $('#' + action + '-username').siblings('.help-inline').show();
     }
     
     if (!password) {
-      $('#' + action + '-password').closest('.clearfix').addClass('error');
-      $('#login-password').addClass('error');
+      $('#' + action + '-password').closest('.control-group').addClass('error');
+      $('#' + action + '-password').siblings('.help-inline').show();
     }
     
     if(username && password){
-      $('form').append(ich.load_image());
+      $('#' + action + '-button').parent().append(ich.load_image());
       $('#' + action + '-button').addClass('disabled');
+      
+      // Everything looks OK with the form, send it to server-side.
+      irc.socket.emit(action, {
+        username: username,
+        password: password
+      });
     }
-
-    irc.socket.emit(action, {
-      username: username,
-      password: password
-    });
   },
 
   toggle_ssl_options: function(event) {
